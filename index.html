@@ -13,13 +13,31 @@
         <script type='text/javascript' src='../gl4/behaviors.js'></script>
         <script type='text/javascript' src='../gl4/conditions.js'></script>
         <script>
-var cursor = gl4.createImage('../art/cursor.png');
-moveTo(cursor, gl4.mouse);
-push(cursor, {angle: 0.01});
+function game() {
+    gl4.layer();
+    var cursor = gl4.createImage('../art/cursor.png');
+    moveTo(cursor, gl4.mouse);
+    push(cursor, {angle: 0.01});
 
-var tank1 = gl4.createImage('../art/enemy.png');
-follow(tank1, gl4.mouse, 0);
-on(mouseDown(), on(pulse(), shoot(tank1, '../art/explosion.png')));
+    var tank1 = gl4.createImage('../art/enemy.png', 'tank', {x: 100, y: 500});
+    var tank2 = gl4.createImage('../art/enemy.png', 'tank', {x: 700, y: 500});
+    tank1.tag('active tank');
+    tank2.tag('inactive tank');
+    glow('active tank');
+
+    on(keyDown('up'), push('active tank', {angle: 0.03}));
+    on(keyDown('down'), push('active tank', {angle: -0.03}));
+    on(keyDown('left'), push('active tank', {x: -1}));
+    on(keyDown('right'), push('active tank', {x: 1}));
+
+    on(up(keyDown('space')),
+       [shoot('active tank', '../art/explosion.png', 'bullet'),
+        swapTags('active tank', 'inactive tank')]);
+    push('bullet', {y: 0.1});
+    fadeOut('bullet', 0.002);
+    on(hit('bullet', 'active tank'), [destroy(MATCH_1), destroy(MATCH_2)]);
+}
+game();
         </script>
     </body>
 </html>
