@@ -45,7 +45,7 @@ function game() {
         swapTags('active tank', 'inactive tank')]);
 
     push('bullet', {y: 0.1});
-    fadeOut('bullet', 0.002);
+    fadeOut('bullet', 0.006);
     on(hit('bullet', 'active tank'), [destroy(MATCH_1), destroy(MATCH_2)]);
 }
 
