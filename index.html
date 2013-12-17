@@ -35,14 +35,23 @@ function game() {
     timer.alignment = 'righ';
     timer.font = '72px Impact';
     timer.color = '#66F';
-    on(pulse(1, undefined, false), timer.subtract());
-    on(timer.at(0),
-       [swapTags('active tank', 'inactive tank'), timer.set(TURN_TIME)]);
+    var strength = gl4.createText(0, [], {x: 40, y: 40});
+    strength.alignment = 'left';
+    strength.font = '72px Impact';
+    strength.color = '#F00';
+    var changeTurn = group(timer.set(TURN_TIME),
+                           strength.set(0),
+                           swapTags('active tank', 'inactive tank'));
+    var shootBullet = function () {
+        once(shoot('active tank', '../art/explosion.png', 'bullet', strength.value));
+    }
 
-    on(up(keyDown('space')),
-       [shoot('active tank', '../art/explosion.png', 'bullet'),
-        timer.set(TURN_TIME),
-        swapTags('active tank', 'inactive tank')]);
+    on(pulse(1, undefined, false), timer.subtract());
+    on(timer.at(0), changeTurn);
+    on(keyDown('space'), strength.add(0.3));
+    on(up(keyUp('space'), true),
+       [shootBullet,
+        changeTurn]);
 
     push('bullet', {y: 0.1});
     fadeOut('bullet', 0.006);
@@ -50,6 +59,7 @@ function game() {
 }
 
 game();
+//gl4.debug = true;
         </script>
     </body>
 </html>
