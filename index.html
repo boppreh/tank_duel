@@ -30,26 +30,25 @@ function game() {
     on(keyDown('left'), push('active tank', {x: -1}));
     on(keyDown('right'), push('active tank', {x: 1}));
 
-    on(up(keyDown('space')),
-       [shoot('active tank', '../art/explosion.png', 'bullet'),
-        swapTags('active tank', 'inactive tank')]);
-    push('bullet', {y: 0.1});
-    fadeOut('bullet', 0.002);
-    on(hit('bullet', 'active tank'), [destroy(MATCH_1), destroy(MATCH_2)]);
-
-    gl4.layer();
-    var timer = gl4.createText(10, [], {x: 780, y: 40});
+    var TURN_TIME = 5;
+    var timer = gl4.createText(TURN_TIME, [], {x: 780, y: 40});
     timer.alignment = 'righ';
     timer.font = '72px Impact';
     timer.color = '#66F';
-    on(pulse(1, undefined, false), function () {
-        timer.value--;
-        if (timer.value === 0) {
-            timer.value = 10;
-            once(swapTags('active tank', 'inactive tank'));
-        }
-    });
+    on(pulse(1, undefined, false), timer.subtract());
+    on(timer.at(0),
+       [swapTags('active tank', 'inactive tank'), timer.set(TURN_TIME)]);
+
+    on(up(keyDown('space')),
+       [shoot('active tank', '../art/explosion.png', 'bullet'),
+        timer.set(TURN_TIME),
+        swapTags('active tank', 'inactive tank')]);
+
+    push('bullet', {y: 0.1});
+    fadeOut('bullet', 0.002);
+    on(hit('bullet', 'active tank'), [destroy(MATCH_1), destroy(MATCH_2)]);
 }
+
 game();
         </script>
     </body>
