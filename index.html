@@ -35,7 +35,7 @@ function game() {
     timer.alignment = 'righ';
     timer.font = '72px Impact';
     timer.color = '#66F';
-    var strength = gl4.createText(0, [], {x: 40, y: 40});
+    var strength = gl4.createText(0, [], {x: 20, y: 40});
     strength.alignment = 'left';
     strength.font = '72px Impact';
     strength.color = '#F00';
@@ -48,7 +48,7 @@ function game() {
 
     on(pulse(1, undefined, false), timer.subtract());
     on(timer.at(0), changeTurn);
-    on(keyDown('space'), strength.add(0.3));
+    on(keyDown('space'), strength.add(0.2));
     on(up(keyUp('space'), true),
        [shootBullet,
         changeTurn]);
