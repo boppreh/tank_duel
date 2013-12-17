@@ -55,7 +55,15 @@ function game() {
 
     push('bullet', {y: 0.1});
     fadeOut('bullet', 0.006);
-    on(hit('bullet', 'active tank'), [destroy(MATCH_1), destroy(MATCH_2)]);
+    on(hit('bullet', 'active tank'),
+       [function () {
+            gl4.createImage('../art/explosion.png', 'explosion', MATCH_2[0].pos);
+        },
+        destroy(MATCH_1),
+        destroy(MATCH_2)]);
+
+    expand('explosion');
+    fadeOut('explosion');
 }
 
 game();
