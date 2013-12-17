@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='utf-8' />
+    <head>
+        <title>GL4</title>
+    </head>
+
+    <body style='background: black;'>
+        <canvas id='canvas' width=800 height=600 style='display: block; background: #333; margin-left: auto; margin-right: auto; cursor: none;'></canvas>
+
+        <script type='text/javascript' src='../gl4/gl4.js'></script>
+        <script type='text/javascript' src='../gl4/behaviors.js'></script>
+        <script type='text/javascript' src='../gl4/conditions.js'></script>
+        <script>
+var cursor = gl4.createImage('../art/cursor.png');
+moveTo(cursor, gl4.mouse);
+push(cursor, {angle: 0.01});
+
+var tank1 = gl4.createImage('../art/enemy.png');
+follow(tank1, gl4.mouse, 0);
+on(mouseDown(), on(pulse(), shoot(tank1, '../art/explosion.png')));
+        </script>
+    </body>
+</html>
