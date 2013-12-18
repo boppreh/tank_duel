@@ -60,6 +60,10 @@ function game() {
             push('active cannon', {x: 1})])]);
 
     var TURN_TIME = 8;
+    var wind = gl4.createText(Math.random() * 2 - 1, [], {x: 400, y: 40});
+    wind.font = '72px Impact';
+    wind.color = '#0F0';
+    wind.decimalPoints = 2;
     var timer = gl4.createText(TURN_TIME, [], {x: 780, y: 40});
     timer.minValue = 0;
     timer.alignment = 'righ';
@@ -69,10 +73,16 @@ function game() {
     strength.alignment = 'left';
     strength.font = '72px Impact';
     strength.color = '#F00';
+    gl4.register(function () {
+        gl4.forEach('bullet', function (bullet) {
+            bullet.push({x: wind.value});
+        });
+    });
     var changeTurn = group(timer.set(TURN_TIME),
                            strength.set(0),
                            swapTags('active tank', 'inactive tank'),
-                           swapTags('active cannon', 'inactive cannon'));
+                           swapTags('active cannon', 'inactive cannon'),
+                           function () { wind.value = Math.random() * 2 - 1});
     var shootBullet = function () {
         once(shoot('active cannon', '../art/explosion.png', 'bullet',
                     strength.value));
