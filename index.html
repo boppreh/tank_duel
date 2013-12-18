@@ -61,6 +61,7 @@ function game() {
 
     var TURN_TIME = 5;
     var timer = gl4.createText(TURN_TIME, [], {x: 780, y: 40});
+    timer.minValue = 0;
     timer.alignment = 'righ';
     timer.font = '72px Impact';
     timer.color = '#66F';
@@ -77,7 +78,7 @@ function game() {
     }
 
     on(pulse(1, undefined, false), timer.subtract());
-    on(timer.at(0), changeTurn);
+    on(timer.at(0), on(strength.at(0), changeTurn);
     on(keyDown('space'), strength.add(0.2));
     on(up(keyUp('space'), true),
        [shootBullet,
