@@ -21,14 +21,16 @@ function game() {
 
     var cannon1 = gl4.createImage('../art/marlon tanks/azul/canhao.png', 'cannon', {x: 100, y: 490});
     var cannon2 = gl4.createImage('../art/marlon tanks/vermelho/canhao.png', 'cannon', {x: 700, y: 490});
-    var tank1 = gl4.createAnimation(['../art/marlon tanks/azul/tank0.png',
-                                     '../art/marlon tanks/azul/tank1.png',
-                                     '../art/marlon tanks/azul/tank2.png',
-                                     '../art/marlon tanks/azul/tank3.png'], 'tank', {x: 100, y: 500});
-    var tank2 = gl4.createAnimation(['../art/marlon tanks/vermelho/tank0.png',
-                                     '../art/marlon tanks/vermelho/tank1.png',
-                                     '../art/marlon tanks/vermelho/tank2.png',
-                                     '../art/marlon tanks/vermelho/tank3.png'], 'tank', {x: 700, y: 500});
+    var tank1 = gl4.createAnimation(['art/blue/tank0.png',
+                                     'art/blue/tank1.png',
+                                     'art/blue/tank2.png',
+                                     'art/blue/tank3.png'],
+                                    'tank', {x: 100, y: 500});
+    var tank2 = gl4.createAnimation(['art/red/tank0.png',
+                                     'art/red/tank1.png',
+                                     'art/red/tank2.png',
+                                     'art/red/tank3.png'],
+                                    'tank', {x: 700, y: 500});
 
     tank1.size = {x: 50 * 1.2, y: 31 * 1.2};
     cannon1.size = {x: 102 * 2/3, y: 12 * 2/3};
