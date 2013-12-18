@@ -19,44 +19,44 @@ function game() {
     moveTo(cursor, gl4.mouse);
     push(cursor, {angle: 0.01});
 
-    var cannon1 = gl4.createImage('../art/marlon tanks/azul/canhao.png', 'cannon', {x: 100, y: 490});
-    var cannon2 = gl4.createImage('../art/marlon tanks/vermelho/canhao.png', 'cannon', {x: 700, y: 490});
+    var cannon1 = gl4.createImage('art/blue/canhao.png', 'active cannon',
+                                  {x: 100, y: 490});
+    var cannon2 = gl4.createImage('art/red/canhao.png', 'inactive cannon',
+                                  {x: 700, y: 490});
     var tank1 = gl4.createAnimation(['art/blue/tank0.png',
                                      'art/blue/tank1.png',
                                      'art/blue/tank2.png',
                                      'art/blue/tank3.png'],
-                                    'tank', {x: 100, y: 500});
+                                    'active tank', {x: 100, y: 500});
     var tank2 = gl4.createAnimation(['art/red/tank0.png',
                                      'art/red/tank1.png',
                                      'art/red/tank2.png',
                                      'art/red/tank3.png'],
-                                    'tank', {x: 700, y: 500});
+                                    'inactive tank', {x: 700, y: 500});
 
     var TANK_SCALE = 0.2,
         CANNON_SCALE = 0.15;
     tank1.size = {x: 255 * TANK_SCALE, y: 159 * TANK_SCALE};
-    tank1.tag('active');
     cannon1.size = {x: 408 * CANNON_SCALE, y: 24 * CANNON_SCALE};
-    cannon1.tag('active cannon');
     tank2.size = {x: 255 * TANK_SCALE, y: 159 * TANK_SCALE};
-    tank2.tag('inactive tank');
     cannon2.size = {x: 408 * CANNON_SCALE, y: 24 * CANNON_SCALE};
-    cannon2.tag('inactive cannon');
     cannon2.pos.angle = Math.PI;
 
-    glow('active');
+    glow('active tank');
+    glow('active cannon');
 
-    limit('cannon', {angle: 0}, {angle: Math.PI})
+    limit('active cannon', {angle: 0}, {angle: Math.PI})
+    limit('inactive cannon', {angle: 0}, {angle: Math.PI})
 
     on(keyDown('up'), push('active cannon', {angle: 0.03}));
     on(keyDown('down'), push('active cannon', {angle: -0.03}));
     on(keyDown('left'),
-       [play('active', -1),
-        push('active', {x: -1}),
+       [play('active tank', -1),
+        push('active tank', {x: -1}),
         push('active cannon', {x: -1})]);
     on(keyDown('right'),
-       [play('active', 1),
-        push('active', {x: 1}),
+       [play('active tank', 1),
+        push('active tank', {x: 1}),
         push('active cannon', {x: 1})]);
 
     var TURN_TIME = 5;
@@ -71,14 +71,15 @@ function game() {
     strength.color = '#F00';
     var changeTurn = group(timer.set(TURN_TIME),
                            strength.set(0),
-                           swapTags('active', 'inactive tank'),
+                           swapTags('active tank', 'inactive tank'),
                            swapTags('active cannon', 'inactive cannon'));
     var shootBullet = function () {
-        once(shoot('active cannon', '../art/explosion.png', 'bullet', strength.value));
+        once(shoot('active cannon', '../art/explosion.png', 'bullet',
+                    strength.value));
     }
 
     on(pulse(1, undefined, false), timer.subtract());
-    on(timer.at(0), on(strength.at(0), changeTurn);
+    on(timer.at(0), on(strength.at(0), changeTurn));
     on(keyDown('space'), strength.add(0.2));
     on(up(keyUp('space'), true),
        [shootBullet,
@@ -86,12 +87,13 @@ function game() {
 
     push('bullet', {y: 0.1});
     fadeOut('bullet', 0.006);
-    on(hit('bullet', 'active'),
+    on(hit('bullet', 'active tank'),
        [function () {
             gl4.createImage('../art/explosion.png', 'explosion', MATCH_2[0].pos);
         },
         destroy(MATCH_1),
-        destroy(MATCH_2)]);
+        destroy('active tank'),
+        destroy('active cannon')]);
 
     expand('explosion');
     fadeOut('explosion');
