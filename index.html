@@ -19,16 +19,40 @@ function game() {
     moveTo(cursor, gl4.mouse);
     push(cursor, {angle: 0.01});
 
-    var tank1 = gl4.createImage('../art/enemy.png', 'tank', {x: 100, y: 500});
-    var tank2 = gl4.createImage('../art/enemy.png', 'tank', {x: 700, y: 500});
+    var cannon1 = gl4.createImage('../art/marlon tanks/azul/canhao.png', 'cannon', {x: 100, y: 490});
+    var cannon2 = gl4.createImage('../art/marlon tanks/vermelho/canhao.png', 'cannon', {x: 700, y: 490});
+    var tank1 = gl4.createAnimation(['../art/marlon tanks/azul/tank0.png',
+                                     '../art/marlon tanks/azul/tank1.png',
+                                     '../art/marlon tanks/azul/tank2.png',
+                                     '../art/marlon tanks/azul/tank3.png'], 'tank', {x: 100, y: 500});
+    var tank2 = gl4.createAnimation(['../art/marlon tanks/vermelho/tank0.png',
+                                     '../art/marlon tanks/vermelho/tank1.png',
+                                     '../art/marlon tanks/vermelho/tank2.png',
+                                     '../art/marlon tanks/vermelho/tank3.png'], 'tank', {x: 700, y: 500});
+
+    tank1.size = {x: 50 * 1.2, y: 31 * 1.2};
+    cannon1.size = {x: 102 * 2/3, y: 12 * 2/3};
+    tank2.size = {x: 50 * 1.2, y: 31 * 1.2};
     tank1.tag('active tank');
+    cannon2.pos.angle = Math.PI;
+    cannon2.size = {x: 102 * 2/3, y: 12 * 2/3};
+    cannon1.tag('active cannon');
     tank2.tag('inactive tank');
+    cannon2.tag('inactive cannon');
     glow('active tank');
 
-    on(keyDown('up'), push('active tank', {angle: 0.03}));
-    on(keyDown('down'), push('active tank', {angle: -0.03}));
-    on(keyDown('left'), push('active tank', {x: -1}));
-    on(keyDown('right'), push('active tank', {x: 1}));
+    limit('cannon', {angle: 0}, {angle: Math.PI})
+
+    on(keyDown('up'), push('active cannon', {angle: 0.03}));
+    on(keyDown('down'), push('active cannon', {angle: -0.03}));
+    on(keyDown('left'),
+       [tank1.prev(),
+        push('active tank', {x: -1}),
+        push('active cannon', {x: -1})]);
+    on(keyDown('right'),
+       [tank1.next(),
+        push('active tank', {x: 1}),
+        push('active cannon', {x: 1})]);
 
     var TURN_TIME = 5;
     var timer = gl4.createText(TURN_TIME, [], {x: 780, y: 40});
@@ -41,9 +65,10 @@ function game() {
     strength.color = '#F00';
     var changeTurn = group(timer.set(TURN_TIME),
                            strength.set(0),
-                           swapTags('active tank', 'inactive tank'));
+                           swapTags('active tank', 'inactive tank'),
+                           swapTags('active cannon', 'inactive cannon'));
     var shootBullet = function () {
-        once(shoot('active tank', '../art/explosion.png', 'bullet', strength.value));
+        once(shoot('active cannon', '../art/explosion.png', 'bullet', strength.value));
     }
 
     on(pulse(1, undefined, false), timer.subtract());
