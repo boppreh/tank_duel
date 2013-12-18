@@ -45,21 +45,21 @@ function game() {
     glow('active tank');
     glow('active cannon');
 
+    follow('active cannon', gl4.mouse, 0);
     limit('active cannon', {angle: 0}, {angle: Math.PI})
     limit('inactive cannon', {angle: 0}, {angle: Math.PI})
 
-    on(keyDown('up'), push('active cannon', {angle: 0.03}));
-    on(keyDown('down'), push('active cannon', {angle: -0.03}));
-    on(keyDown('left'),
-       [play('active tank', -1),
-        push('active tank', {x: -1}),
-        push('active cannon', {x: -1})]);
-    on(keyDown('right'),
-       [play('active tank', 1),
-        push('active tank', {x: 1}),
-        push('active cannon', {x: 1})]);
+    on(not(exists('bullet')), 
+       [on(keyDown('left'),
+           [play('active tank', -1),
+            push('active tank', {x: -1}),
+            push('active cannon', {x: -1})]),
+        on(keyDown('right'),
+           [play('active tank', 1),
+            push('active tank', {x: 1}),
+            push('active cannon', {x: 1})])]);
 
-    var TURN_TIME = 5;
+    var TURN_TIME = 8;
     var timer = gl4.createText(TURN_TIME, [], {x: 780, y: 40});
     timer.minValue = 0;
     timer.alignment = 'righ';
@@ -80,10 +80,8 @@ function game() {
 
     on(pulse(1, undefined, false), timer.subtract());
     on(timer.at(0), on(strength.at(0), changeTurn));
-    on(keyDown('space'), strength.add(0.2));
-    on(up(keyUp('space'), true),
-       [shootBullet,
-        changeTurn]);
+    on(mouseDown(), strength.add(0.2));
+    on(mouseUp(), on(strength.positive(), [shootBullet, changeTurn]));
 
     push('bullet', {y: 0.1});
     fadeOut('bullet', 0.006);
@@ -95,7 +93,7 @@ function game() {
         destroy('active tank'),
         destroy('active cannon')]);
 
-    expand('explosion');
+    expand('explosion', 0.05);
     fadeOut('explosion');
 }
 
