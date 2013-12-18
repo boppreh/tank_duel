@@ -46,11 +46,11 @@ function game() {
     on(keyDown('up'), push('active cannon', {angle: 0.03}));
     on(keyDown('down'), push('active cannon', {angle: -0.03}));
     on(keyDown('left'),
-       [tank1.prev(),
+       [play('active tank', -1),
         push('active tank', {x: -1}),
         push('active cannon', {x: -1})]);
     on(keyDown('right'),
-       [tank1.next(),
+       [play('active tank', 1),
         push('active tank', {x: 1}),
         push('active cannon', {x: 1})]);
 
